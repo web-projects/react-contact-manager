@@ -10,11 +10,7 @@ git remote add origin git@github.com:web-projects/reactjs-contactmanager.git
 
     $ npm start
 
-# -------------------------------------------------
-
 ## HISTORY
-
-# -------------------------------------------------
 
 ---
 
@@ -25,11 +21,7 @@ git remote add origin git@github.com:web-projects/reactjs-contactmanager.git
     $ 2018/08/18 - Added Form validation.
     $ 2018/08/19 - Working with Forms.
 
-# -------------------------------------------------
-
 ## HEROKU HOSTING
-
-# -------------------------------------------------
 
 From the root of the project:
 
