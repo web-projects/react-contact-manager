@@ -20,6 +20,7 @@ git remote add origin git@github.com:web-projects/reactjs-contactmanager.git
     $ 2018/08/17 - State & the Context API.
     $ 2018/08/18 - Added Form validation.
     $ 2018/08/19 - Working with Forms.
+    $ 2018/08/19 - React Router v4
 
 ## HEROKU HOSTING
 

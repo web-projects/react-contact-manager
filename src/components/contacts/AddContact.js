@@ -53,6 +53,9 @@ class AddContact extends Component {
       phone: '',
       errors: {}
     });
+
+    // Redirect to INDEX
+    this.props.history.push('/');
   };
 
   // Only a single change state is needed as long as the 'e.targe.name is set for all cases.
