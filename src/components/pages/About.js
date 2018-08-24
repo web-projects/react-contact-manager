@@ -1,5 +1,6 @@
 import React from 'react';
 
+// ABOUT PAGE
 export default () => {
   return (
     <div>
