@@ -7,6 +7,7 @@ import TextInputGroup from '../layout/TextInputGroup';
 import uuid from 'uuid';
 
 class EditContact extends Component {
+  // Reset state
   state = {
     name: '',
     email: '',
@@ -15,17 +16,34 @@ class EditContact extends Component {
   };
 
   async componentDidMount() {
+    // Parameter is ID
     const { id } = this.props.match.params;
-    const res = await axios.get(
-      `https://jsonplaceholder.typicode.com/users/${id}`
-    );
 
-    const contact = res.data;
-    this.setState({
-      name: contact.name,
-      email: contact.email,
-      phone: contact.phone
-    });
+    console.log(this.props);
+    console.log(this.name);
+
+    try {
+      const res = await axios.get(
+        `https://jsonplaceholder.typicode.com/users/${id}`
+      );
+
+      const contact = res.data;
+      this.setState({
+        name: contact.name,
+        email: contact.email,
+        phone: contact.phone
+      });
+    } catch (e) {
+      // 404 error with newly ADDED contact since it doesn't really exist in the repository
+      //const { name, email, phone } = this.props.match.params;
+      const { contact } = this.state;
+      console.log(contact);
+      /*this.setState({
+        name: contact.name,
+        email: contact.email,
+        phone: contact.phone
+      });*/
+    }
   }
 
   onSubmit = async (dispatch, e) => {
@@ -60,17 +78,25 @@ class EditContact extends Component {
 
     const { id } = this.props.match.params;
 
-    const res = await axios.put(
-      `https://jsonplaceholder.typicode.com/users/${id}`,
-      updateContact
-    );
+    console.log(updateContact);
 
-    //console.log(res.data);
+    try {
+      const res = await axios.put(
+        `https://jsonplaceholder.typicode.com/users/${id}`,
+        updateContact
+      );
 
-    dispatch({
-      type: 'UPDATE_CONTACT',
-      payload: res.data
-    });
+      dispatch({
+        type: 'UPDATE_CONTACT',
+        payload: res.data
+      });
+    } catch (e) {
+      // 404 error with newly ADDED contact since it doesn't really exist in the repository
+      dispatch({
+        type: 'UPDATE_CONTACT',
+        payload: updateContact
+      });
+    }
 
     // Clear state/form
     this.setState({

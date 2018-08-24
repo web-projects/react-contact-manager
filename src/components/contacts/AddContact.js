@@ -44,7 +44,7 @@ class AddContact extends Component {
       phone
     };
 
-    console.log(newContact);
+    //console.log(newContact);
 
     // ASYNC CALL
     const res = await axios.post(
