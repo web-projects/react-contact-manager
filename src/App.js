@@ -6,6 +6,8 @@ import EditContact from './components/contacts/EditContact';
 import Header from './components/layout/Header';
 import About from './components/pages/About';
 
+// NOTE: HEROKU IS GIVING THIS ERROR WHEN INCLUDING NotFound Page: this error occurred
+//       during the build time and cannot be dismissed.
 //import NotFound from './components/pages/NotFound';
 
 import { Provider } from 'react-redux';
