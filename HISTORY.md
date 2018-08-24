@@ -23,6 +23,7 @@ git remote add origin git@github.com:web-projects/reactjs-contactmanager.git
     $ 2018/08/19 - React Router v4.
     $ 2018/08/21 - Lifecyle Methods, HTTP and Deployment.
     $ 2018/08/22 - Redux Introduction.
+                 - Redux Thunk and HTTP.
 
 ## HEROKU HOSTING
 

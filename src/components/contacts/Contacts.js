@@ -1,29 +1,50 @@
 import React, { Component } from 'react';
-import Contact from './Contact';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import { Consumer } from '../../context';
+import Contact from './Contact';
+import { getContacts } from '../../actions/contactActions';
 
 class Contacts extends Component {
-  render() {
-    return (
-      <Consumer>
-        {value => {
-          const { contacts } = value;
+  // Setup contacts object
+  componentDidMount() {
+    this.props.getContacts();
+  }
 
-          return (
-            <React.Fragment>
-              <h1 className="display-4 mb-2">
-                <span className="text-danger">Contact</span> List
-              </h1>
-              {contacts.map(contact => (
-                <Contact key={contact.id} contact={contact} />
-              ))}
-            </React.Fragment>
-          );
-        }}
-      </Consumer>
+  render() {
+    const { contacts } = this.props;
+    return (
+      <React.Fragment>
+        <h1 className="display-4 mb-2">
+          <span className="text-danger">Contact</span> List
+        </h1>
+        {contacts.map(contact => (
+          <Contact key={contact.id} contact={contact} />
+        ))}
+      </React.Fragment>
     );
   }
 }
 
-export default Contacts;
+Contacts.propTypes = {
+  contacts: PropTypes.array.isRequired,
+  getContacts: PropTypes.func.isRequired
+};
+
+const mapStateToProps = state => ({
+  contacts: state.contact.contacts
+});
+
+// FIREUP THE REDUCER WITH DISPATCH - moved to actions/contactActions.js
+//const mapDispatchToProps = state => ({
+//  getContacts: () =>
+//    dispatch({
+//      type: GET_CONTACTS
+//    })
+//});
+
+// Notice how the DISPATCH is replaced with a direct call in this export
+export default connect(
+  mapStateToProps,
+  { getContacts }
+)(Contacts);

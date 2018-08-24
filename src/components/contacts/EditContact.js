@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import { Consumer } from '../../context';
-import axios from 'axios';
-
 import TextInputGroup from '../layout/TextInputGroup';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-import uuid from 'uuid';
+import { getContact, updateContact } from '../../actions/contactActions';
 
 class EditContact extends Component {
-  // Reset state
   state = {
     name: '',
     email: '',
@@ -15,45 +13,32 @@ class EditContact extends Component {
     errors: {}
   };
 
-  async componentDidMount() {
-    // Parameter is ID
+  componentWillReceiveProps(nextProps, nextState) {
+    const { name, email, phone } = nextProps.contact;
+    this.setState({
+      name,
+      email,
+      phone
+    });
+  }
+
+  componentDidMount() {
     const { id } = this.props.match.params;
 
-    console.log(this.props);
-    console.log(this.name);
-
     try {
-      const res = await axios.get(
-        `https://jsonplaceholder.typicode.com/users/${id}`
-      );
-
-      const contact = res.data;
-      this.setState({
-        name: contact.name,
-        email: contact.email,
-        phone: contact.phone
-      });
+      this.props.getContact(id);
     } catch (e) {
       // 404 error with newly ADDED contact since it doesn't really exist in the repository
-      //const { name, email, phone } = this.props.match.params;
-      const { contact } = this.state;
-      console.log(contact);
-      /*this.setState({
-        name: contact.name,
-        email: contact.email,
-        phone: contact.phone
-      });*/
+      // TODO: retrieve contact that was newly created and not part of the original payload.
     }
   }
 
-  onSubmit = async (dispatch, e) => {
-    // No default action
+  onSubmit = e => {
     e.preventDefault();
 
-    // Pull out content from state to build payload
     const { name, email, phone } = this.state;
 
-    // Check for errors
+    // Check For Errors
     if (name === '') {
       this.setState({ errors: { name: 'Name is required' } });
       return;
@@ -69,36 +54,20 @@ class EditContact extends Component {
       return;
     }
 
-    const updateContact = {
-      //id: uuid(),
+    const { id } = this.props.match.params;
+
+    // Initialize contact
+    const updContact = {
+      id,
       name,
       email,
       phone
     };
 
-    const { id } = this.props.match.params;
+    // Update Contact
+    this.props.updateContact(updContact);
 
-    console.log(updateContact);
-
-    try {
-      const res = await axios.put(
-        `https://jsonplaceholder.typicode.com/users/${id}`,
-        updateContact
-      );
-
-      dispatch({
-        type: 'UPDATE_CONTACT',
-        payload: res.data
-      });
-    } catch (e) {
-      // 404 error with newly ADDED contact since it doesn't really exist in the repository
-      dispatch({
-        type: 'UPDATE_CONTACT',
-        payload: updateContact
-      });
-    }
-
-    // Clear state/form
+    // Clear State
     this.setState({
       name: '',
       email: '',
@@ -106,61 +75,66 @@ class EditContact extends Component {
       errors: {}
     });
 
-    // Redirect to INDEX
     this.props.history.push('/');
   };
 
-  // Only a single change state is needed as long as the 'e.targe.name is set for all cases.
   onChange = e => this.setState({ [e.target.name]: e.target.value });
 
   render() {
     const { name, email, phone, errors } = this.state;
 
     return (
-      <Consumer>
-        {value => {
-          const { dispatch } = value;
-          return (
-            <div className="card mb-3">
-              <div className="card-header">Edit Contact</div>
-              <form onSubmit={this.onSubmit.bind(this, dispatch)}>
-                <TextInputGroup
-                  label="Name"
-                  name="name"
-                  placeholder="Enter Name"
-                  value={name}
-                  onChange={this.onChange}
-                  error={errors.name}
-                />
-                <TextInputGroup
-                  label="Email"
-                  name="email"
-                  type="email"
-                  placeholder="Enter Email"
-                  value={email}
-                  onChange={this.onChange}
-                  error={errors.email}
-                />
-                <TextInputGroup
-                  label="Phone"
-                  name="phone"
-                  placeholder="Enter Phone"
-                  value={phone}
-                  onChange={this.onChange}
-                  error={errors.phone}
-                />
-                <input
-                  type="submit"
-                  value="Update Contact"
-                  className="btn btn-light btn-block"
-                />
-              </form>
-            </div>
-          );
-        }}
-      </Consumer>
+      <div className="card mb-3">
+        <div className="card-header">Edit Contact</div>
+        <div className="card-body">
+          <form onSubmit={this.onSubmit}>
+            <TextInputGroup
+              label="Name"
+              name="name"
+              placeholder="Enter Name"
+              value={name}
+              onChange={this.onChange}
+              error={errors.name}
+            />
+            <TextInputGroup
+              label="Email"
+              name="email"
+              type="email"
+              placeholder="Enter Email"
+              value={email}
+              onChange={this.onChange}
+              error={errors.email}
+            />
+            <TextInputGroup
+              label="Phone"
+              name="phone"
+              placeholder="Enter Phone"
+              value={phone}
+              onChange={this.onChange}
+              error={errors.phone}
+            />
+            <input
+              type="submit"
+              value="Update Contact"
+              className="btn btn-light btn-block"
+            />
+          </form>
+        </div>
+      </div>
     );
   }
 }
 
-export default EditContact;
+EditContact.propTypes = {
+  contact: PropTypes.object.isRequired,
+  getContact: PropTypes.func.isRequired
+};
+
+const mapStateToProps = state => ({
+  contact: state.contact.contact
+});
+
+export default connect(
+  mapStateToProps,
+  { getContact, updateContact }
+)(EditContact);

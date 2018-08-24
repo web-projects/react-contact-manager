@@ -1,11 +1,9 @@
 import React from 'react';
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 const Header = props => {
-  // destructuring
   const { branding } = props;
-
   return (
     <nav className="navbar navbar-expand-sm navbar-dark bg-danger mb-3 py-0">
       <div className="container">
@@ -25,7 +23,7 @@ const Header = props => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/About" className="nav-link">
+              <Link to="/about" className="nav-link">
                 <i className="fas fa-question" /> About
               </Link>
             </li>
@@ -36,13 +34,12 @@ const Header = props => {
   );
 };
 
-// Default Props
 Header.defaultProps = {
   branding: 'My App'
 };
 
 Header.propTypes = {
-  branding: propTypes.string.isRequired
+  branding: PropTypes.string.isRequired
 };
 
 export default Header;
